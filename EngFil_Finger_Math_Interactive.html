@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplying 6 to 10 using fingers</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --primary: #3b82f6;
+            --accent-left: #ec4899;
+            --accent-right: #8b5cf6;
+            --text-main: #1e293b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            box-sizing: border-box;
+        }
+
+        .header-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0;
+            font-size: 1.4rem;
+            color: #0f172a;
+        }
+
+        .btn-help {
+            background-color: #0f172a;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+
+        .btn-help:hover {
+            background-color: #334155;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .lang-toggle {
+            display: flex;
+            background: #e2e8f0;
+            border-radius: 20px;
+            padding: 3px;
+            gap: 2px;
+        }
+
+        .lang-btn {
+            border: none;
+            background: transparent;
+            color: #475569;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 5px 14px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+
+        .lang-btn:hover:not(.active) {
+            background: #cbd5e1;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 100%;
+            padding: 20px 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 10px;
+            margin-bottom: 12px;
+        }
+
+        .modal-title {
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #0f172a;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            line-height: 1;
+            color: #64748b;
+            cursor: pointer;
+            padding: 0 4px;
+        }
+
+        .close-btn:hover {
+            color: #0f172a;
+        }
+
+        .instruction-step {
+            margin-bottom: 12px;
+        }
+
+        .instruction-step h4 {
+            margin: 0 0 4px 0;
+            font-size: 0.95rem;
+            color: #2563eb;
+        }
+
+        .instruction-step p {
+            margin: 0;
+            font-size: 0.88rem;
+            color: #475569;
+            line-height: 1.4;
+        }
+
+        /* Hands Layout with Center Math Expression */
+        .hands-display {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            padding: 15px 5px;
+            border: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .hand-wrapper {
+            flex: 1;
+            max-width: 42%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Center Expression Positioned Between Hands */
+        .center-math-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 5px;
+        }
+
+        .math-expr {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #0f172a;
+            background: #ffffff;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 2px solid #cbd5e1;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+            max-height: 200px;
+            overflow: visible;
+        }
+
+        /* Small Controls Below Hands */
+        .hand-control {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: #ffffff;
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+            width: 90%;
+            box-sizing: border-box;
+        }
+
+        .hand-title {
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .hand-title.left { color: var(--accent-left); }
+        .hand-title.right { color: var(--accent-right); }
+
+        .btn-group {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            width: 100%;
+            justify-content: center;
+        }
+
+        button.btn-small {
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: none;
+            background-color: var(--primary);
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            touch-action: manipulation;
+            flex: 1;
+            max-width: 60px;
+        }
+
+        button.btn-small:hover:not(:disabled) {
+            filter: brightness(1.1);
+        }
+
+        button.btn-small:active:not(:disabled) {
+            transform: scale(0.96);
+        }
+
+        button.btn-small:disabled {
+            background-color: #cbd5e1;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .value-display {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        /* Finger Animation Styles */
+        .finger {
+            transform-origin: bottom center;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .finger.closed {
+            transform: scaleY(0.2) translateY(120px);
+        }
+
+        .finger.open {
+            transform: scaleY(1) translateY(0);
+        }
+
+        .finger-rect {
+            fill: #e2e8f0;
+            stroke: #64748b;
+            stroke-width: 2;
+            rx: 10px;
+            transition: fill 0.3s ease, stroke 0.3s ease;
+        }
+
+        .finger.open .finger-rect {
+            fill: #60a5fa;
+            stroke: #2563eb;
+        }
+
+        .finger.touching .finger-rect {
+            fill: #f59e0b;
+            stroke: #d97706;
+        }
+
+        .finger-text {
+            font-weight: bold;
+            font-size: 14px;
+            fill: #1e293b;
+            user-select: none;
+            transition: opacity 0.2s;
+        }
+
+        .finger.closed .finger-text {
+            opacity: 0;
+        }
+
+        /* Results Panel */
+        .results-panel {
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .result-card {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .result-card h3 {
+            margin: 0 0 6px 0;
+            font-size: 0.9rem;
+            color: #334155;
+        }
+
+        .result-card p {
+            margin: 3px 0;
+            font-size: 0.85rem;
+        }
+
+        .final-sum {
+            grid-column: span 2;
+            background: #e0f2fe;
+            border-left-color: #0284c7;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #0369a1;
+            padding: 12px;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.15rem;
+            }
+            .container {
+                padding: 10px;
+            }
+            .math-expr {
+                font-size: 0.9rem;
+                padding: 4px 6px;
+            }
+            .results-panel {
+                grid-template-columns: 1fr;
+            }
+            .final-sum {
+                grid-column: span 1;
+            }
+            .hand-control {
+                width: 100%;
+                padding: 6px;
+            }
+        }
+
+        /* Interactive Step-by-Step Learning */
+        .step-learning {
+            margin-top: 15px;
+            background: #faf5ff;
+            border: 2px solid #ddd6fe;
+            border-radius: 14px;
+            padding: 16px;
+        }
+        .step-learning h2 {
+            margin: 0 0 6px;
+            font-size: 1.05rem;
+            color: #6d28d9;
+        }
+        .step-intro {
+            margin: 0 0 12px;
+            color: #475569;
+            font-size: 0.88rem;
+            line-height: 1.45;
+        }
+        .step-box {
+            background: #fff;
+            border-radius: 12px;
+            padding: 14px;
+            border: 1px solid #e2e8f0;
+        }
+        .completed-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            margin-bottom: 12px;
+        }
+        .completed-step {
+            background: #f0fdf4;
+            border: 1px solid #86efac;
+            border-left: 5px solid #16a34a;
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+        .completed-step .completed-title {
+            font-weight: 700;
+            color: #166534;
+            font-size: .9rem;
+            margin-bottom: 4px;
+        }
+        .completed-step .completed-answer {
+            color: #14532d;
+            font-size: .88rem;
+        }
+        .completed-step .completed-explanation {
+            margin-top: 5px;
+            color: #365314;
+            font-size: .82rem;
+            line-height: 1.4;
+        }
+        .step-progress {
+            font-size: .78rem;
+            color: #64748b;
+            margin: 0 0 9px;
+        }
+        .final-learning-result {
+            margin-top: 10px;
+            background: #e0f2fe;
+            border: 2px solid #7dd3fc;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            color: #075985;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+        .step-number {
+            display: inline-block;
+            background: #7c3aed;
+            color: white;
+            border-radius: 20px;
+            padding: 4px 9px;
+            font-size: .75rem;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+        .step-question {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 4px 0 12px;
+        }
+        .step-choices {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .step-choice, .show-step-btn, .next-step-btn, .restart-step-btn {
+            border: none;
+            border-radius: 9px;
+            padding: 10px 12px;
+            font-weight: 700;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+        .step-choice {
+            background: #ede9fe;
+            color: #5b21b6;
+            border: 1px solid #c4b5fd;
+        }
+        .step-choice:hover:not(:disabled) {
+            background: #ddd6fe;
+        }
+        .step-choice:disabled {
+            opacity: .6;
+            cursor: default;
+        }
+        .show-step-btn {
+            width: 100%;
+            background: #7c3aed;
+            color: white;
+            font-size: .95rem;
+        }
+        .show-step-btn:hover { filter: brightness(1.08); }
+        .next-step-btn {
+            background: #059669;
+            color: white;
+            margin-top: 10px;
+        }
+        .restart-step-btn {
+            background: #475569;
+            color: white;
+            margin-top: 10px;
+        }
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 9px;
+            font-size: .86rem;
+            line-height: 1.45;
+        }
+        .feedback.correct {
+            background: #ecfdf5;
+            border: 1px solid #86efac;
+            color: #166534;
+        }
+        .feedback.wrong {
+            background: #fff7ed;
+            border: 1px solid #fdba74;
+            color: #9a3412;
+        }
+        .hidden { display: none !important; }
+        .results-panel.locked { display: none; }
+        @media (max-width: 480px) {
+            .step-choices { grid-template-columns: repeat(2, 1fr); }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-area">
+        <h1 id="pageHeading">Multiplying 6 to 10 using fingers</h1>
+        <div class="header-controls">
+            <div class="lang-toggle" role="group" aria-label="Language">
+                <button class="lang-btn active" id="langBtnEn" onclick="setLanguage('en')">EN</button>
+                <button class="lang-btn" id="langBtnFil" onclick="setLanguage('fil')">FIL</button>
+            </div>
+            <button class="btn-help" onclick="toggleModal(true)">
+                <span id="helpBtnText">❓ How to Use</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Hands Display with Center Math Expression -->
+    <div class="hands-display">
+        <!-- LEFT HAND -->
+        <div class="hand-wrapper">
+            <svg viewBox="0 0 220 220">
+                <path d="M 15 160 L 205 160 L 190 210 L 30 210 Z" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+                
+                <g class="finger closed" id="L6">
+                    <rect x="18" y="70" width="25" height="95" class="finger-rect"/>
+                    <text x="30" y="95" class="finger-text" text-anchor="middle">6</text>
+                </g>
+                <g class="finger closed" id="L7">
+                    <rect x="50" y="40" width="25" height="125" class="finger-rect"/>
+                    <text x="62" y="65" class="finger-text" text-anchor="middle">7</text>
+                </g>
+                <g class="finger closed" id="L8">
+                    <rect x="82" y="20" width="25" height="145" class="finger-rect"/>
+                    <text x="94" y="45" class="finger-text" text-anchor="middle">8</text>
+                </g>
+                <g class="finger closed" id="L9">
+                    <rect x="114" y="35" width="25" height="130" class="finger-rect"/>
+                    <text x="126" y="60" class="finger-text" text-anchor="middle">9</text>
+                </g>
+                <g class="finger closed" id="L10">
+                    <rect x="146" y="60" width="30" height="105" class="finger-rect"/>
+                    <text x="161" y="85" class="finger-text" text-anchor="middle">10</text>
+                </g>
+            </svg>
+
+            <!-- Control Below Left Hand -->
+            <div class="hand-control">
+                <span class="hand-title left" id="leftHandLabel">Left Hand</span>
+                <div class="btn-group">
+                    <button class="btn-small" onclick="changeLeft(-1)" id="btnLDown">▼</button>
+                    <button class="btn-small" onclick="changeLeft(1)" id="btnLUp">▲</button>
+                </div>
+                <div class="value-display" id="dispLeftText">Val: 0</div>
+            </div>
+        </div>
+
+        <!-- Center Math Expression -->
+        <div class="center-math-container">
+            <div class="math-expr" id="mathExpr">Choose numbers</div>
+        </div>
+
+        <!-- RIGHT HAND -->
+        <div class="hand-wrapper">
+            <svg viewBox="0 0 220 220">
+                <path d="M 15 160 L 205 160 L 190 210 L 30 210 Z" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+
+                <g class="finger closed" id="R10">
+                    <rect x="24" y="60" width="30" height="105" class="finger-rect"/>
+                    <text x="39" y="85" class="finger-text" text-anchor="middle">10</text>
+                </g>
+                <g class="finger closed" id="R9">
+                    <rect x="61" y="35" width="25" height="130" class="finger-rect"/>
+                    <text x="73" y="60" class="finger-text" text-anchor="middle">9</text>
+                </g>
+                <g class="finger closed" id="R8">
+                    <rect x="93" y="20" width="25" height="145" class="finger-rect"/>
+                    <text x="105" y="45" class="finger-text" text-anchor="middle">8</text>
+                </g>
+                <g class="finger closed" id="R7">
+                    <rect x="125" y="40" width="25" height="125" class="finger-rect"/>
+                    <text x="137" y="65" class="finger-text" text-anchor="middle">7</text>
+                </g>
+                <g class="finger closed" id="R6">
+                    <rect x="157" y="70" width="25" height="95" class="finger-rect"/>
+                    <text x="169" y="95" class="finger-text" text-anchor="middle">6</text>
+                </g>
+            </svg>
+
+            <!-- Control Below Right Hand -->
+            <div class="hand-control">
+                <span class="hand-title right" id="rightHandLabel">Right Hand</span>
+                <div class="btn-group">
+                    <button class="btn-small" onclick="changeRight(-1)" id="btnRDown">▼</button>
+                    <button class="btn-small" onclick="changeRight(1)" id="btnRUp">▲</button>
+                </div>
+                <div class="value-display" id="dispRightText">Val: 0</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Math Step Breakdown -->
+    <div class="results-panel locked" id="resultsPanel">
+        <div class="result-card">
+            <h3 id="tensPlaceTitle">1. Tens Place (Open Fingers)</h3>
+            <p><span id="leftOpenLabel">Left open:</span> <strong id="leftDownCount">0</strong></p>
+            <p><span id="rightOpenLabel">Right open:</span> <strong id="rightDownCount">0</strong></p>
+            <p><span id="totalOpenLabel">Total open:</span> <span id="totalDown">0</span> &times; 10 = <strong id="tensVal" style="color:#2563eb;">0</strong></p>
+        </div>
+
+        <div class="result-card">
+            <h3 id="onesPlaceTitle">2. Ones Place (Closed Fingers)</h3>
+            <p><span id="leftClosedLabel">Left closed:</span> <strong id="leftUpCount">5</strong></p>
+            <p><span id="rightClosedLabel">Right closed:</span> <strong id="rightUpCount">5</strong></p>
+            <p><span id="multiplyClosedLabel">Multiply closed:</span> <span id="leftUpMult">5</span> &times; <span id="rightUpMult">5</span> = <strong id="onesVal" style="color:#d97706;">25</strong></p>
+        </div>
+
+        <div class="result-card final-sum">
+            <span id="calculationLabel">Calculation:</span> <span id="tensValSum">0</span> + <span id="onesValSum">25</span> = <span id="finalResult">25</span>
+        </div>
+    </div>
+
+    <!-- Interactive Step-by-Step Learning -->
+    <div class="step-learning" id="stepLearning">
+        <h2 id="learnHeading">🎯 Learn It Step by Step</h2>
+        <p class="step-intro" id="stepIntroText">
+            Tap the button with the correct number to answer each question below.
+            A correct answer reveals the explanation and unlocks the next step — pick again if you get it wrong.
+        </p>
+
+        <button class="show-step-btn" id="showStepBtn" onclick="showFirstStep()">
+            ▶ Start Step-by-Step
+        </button>
+
+        <div class="step-box hidden" id="stepBox">
+            <div class="completed-steps" id="completedSteps"></div>
+            <div class="current-step" id="currentStep">
+            <p class="step-progress" id="stepProgress"></p>
+            <span class="step-number" id="stepNumber">Step 1</span>
+            <div class="step-question" id="stepQuestion"></div>
+            <div class="step-choices" id="stepChoices"></div>
+            <div class="feedback hidden" id="stepFeedback"></div>
+            <button class="next-step-btn hidden" id="nextStepBtn" onclick="nextLearningStep()">Continue to Next Step →</button>
+            </div>
+        </div>
+
+        <button class="restart-step-btn hidden" id="restartStepBtn" onclick="startLearningAgain()">
+            ↻ Start Again
+        </button>
+    </div>
+
+</div>
+
+<!-- Instructions Modal -->
+<div class="modal-overlay" id="instructionsModal" onclick="handleOverlayClick(event)">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="modal-title" id="modalTitleText">📖 How to Use Finger Math</span>
+            <button class="close-btn" onclick="toggleModal(false)">&times;</button>
+        </div>
+        
+        <div class="instruction-step">
+            <h4 id="step1TitleText">1. Pick Your Numbers</h4>
+            <p id="step1BodyText">Each finger stands for a number from <strong>6 to 10</strong> (Pinky = 6, Ring = 7, Middle = 8, Index = 9, Thumb = 10). Use the <strong>▲ / ▼</strong> buttons below each hand to choose the two numbers you want to multiply (for example: Left = 8, Right = 7).</p>
+        </div>
+
+        <div class="instruction-step">
+            <h4 id="step2TitleText">2. Find the Tens and Ones</h4>
+            <p id="step2BodyText"><strong>Tens:</strong> Count every <strong>raised finger</strong> on both hands together, then multiply that count by <strong>10</strong>.<br>
+            <strong>Ones:</strong> On each hand, count the fingers that <strong>aren't raised</strong>, then multiply the left hand's count by the right hand's count.</p>
+        </div>
+
+        <div class="instruction-step">
+            <h4 id="step3TitleText">3. Add Them Together</h4>
+            <p id="step3BodyText">Add the <strong>Tens</strong> value and the <strong>Ones</strong> value to get your final answer!</p>
+        </div>
+
+        <div class="instruction-step" style="background:#f0f9ff; border:1px solid #bae6fd; border-radius:10px; padding:10px 12px; margin-top:16px;">
+            <h4 style="color:#0369a1;" id="summaryTitleText">💡 Quick Summary</h4>
+            <p id="summaryBodyText">Pick two numbers with your fingers, then do two quick counts: raised fingers × 10 (tens), and un-raised fingers on each hand multiplied together (ones). Add the two results, and that's your answer!</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    let leftVal = 0;
+    let rightVal = 0;
+    const values = [0, 6, 7, 8, 9, 10];
+    let learningStep = 0;
+    let learningFinished = false;
+    let currentLang = 'en';
+
+    const translations = {
+        en: {
+            pageTitle: 'Multiplying 6 to 10 using fingers',
+            helpBtn: '❓ How to Use',
+            modalTitle: '📖 How to Use Finger Math',
+            step1Title: '1. Pick Your Numbers',
+            step1Text: `Each finger stands for a number from <strong>6 to 10</strong> (Pinky = 6, Ring = 7, Middle = 8, Index = 9, Thumb = 10). Use the <strong>▲ / ▼</strong> buttons below each hand to choose the two numbers you want to multiply (for example: Left = 8, Right = 7).`,
+            step2Title: '2. Find the Tens and Ones',
+            step2Text: `<strong>Tens:</strong> Count every <strong>raised finger</strong> on both hands together, then multiply that count by <strong>10</strong>.<br><strong>Ones:</strong> On each hand, count the fingers that <strong>aren't raised</strong>, then multiply the left hand's count by the right hand's count.`,
+            step3Title: '3. Add Them Together',
+            step3Text: `Add the <strong>Tens</strong> value and the <strong>Ones</strong> value to get your final answer!`,
+            summaryTitle: '💡 Quick Summary',
+            summaryText: `Pick two numbers with your fingers, then do two quick counts: raised fingers × 10 (tens), and un-raised fingers on each hand multiplied together (ones). Add the two results, and that's your answer!`,
+            leftHand: 'Left Hand',
+            rightHand: 'Right Hand',
+            val: 'Val',
+            chooseNumbers: 'Choose numbers',
+            tensPlaceTitle: '1. Tens Place (Open Fingers)',
+            leftOpenLabel: 'Left open:',
+            rightOpenLabel: 'Right open:',
+            totalOpenLabel: 'Total open:',
+            onesPlaceTitle: '2. Ones Place (Closed Fingers)',
+            leftClosedLabel: 'Left closed:',
+            rightClosedLabel: 'Right closed:',
+            multiplyClosedLabel: 'Multiply closed:',
+            calculationLabel: 'Calculation:',
+            learnHeading: '🎯 Learn It Step by Step',
+            stepIntro: `Tap the button with the correct number to answer each question below. A correct answer reveals the explanation and unlocks the next step — pick again if you get it wrong.`,
+            startBtn: '▶ Start Step-by-Step',
+            restartBtn: '↻ Start Again',
+            pleaseChoose: 'Please choose a number on both hands first.',
+            stepProgress: (l, r) => `Numbers: ${l} × ${r}  •  Complete each step to reveal the next one`,
+            stepOf: (n, total) => `Step ${n} of ${total}`,
+            correctLabel: '✅ <strong>Correct!</strong><br>',
+            wrongFeedback: (selected) => `❌ <strong>Not quite.</strong><br>You chose <strong>${selected}</strong>. Look at the raised and folded fingers again. Count carefully. The correct answer is not revealed yet—try another choice.`,
+            continueBtn: 'Continue to Next Step →',
+            finishBtn: '🎉 Finish & Show Final Result',
+            completedStepLabel: (n, title) => `✅ Step ${n}: ${title}`,
+            yourAnswer: (a) => `Your answer: ${a}`,
+            finalResultText: (l, r, total) => `🎉 Excellent! You completed every step.<br><br>${l} × ${r} = ${total}<br><small>The full calculation is now available below for review.</small>`,
+            step1Q: `What is the result when the total number of <strong>raised fingers</strong> on both hands is multiplied by <strong>10</strong>?`,
+            step1Explain: (leftOpen, rightOpen, totalOpen, tens) => `Count every <strong>raised finger</strong> on both hands. LEFT has <strong>${leftOpen}</strong> raised and RIGHT has <strong>${rightOpen}</strong> raised, for a total of <strong>${leftOpen} + ${rightOpen} = ${totalOpen}</strong>. Multiply that by 10: <strong>${totalOpen} × 10 = ${tens}</strong>. This is the <strong>TENS part</strong> of the multiplication.`,
+            step2Q: `What is the result when the fingers that <strong>aren't raised</strong> on the LEFT hand are multiplied by the fingers that aren't raised on the RIGHT hand?`,
+            step2Explain: (leftClosed, rightClosed, ones) => `On each hand, count the fingers that <strong>aren't raised</strong>. LEFT has <strong>${leftClosed}</strong> and RIGHT has <strong>${rightClosed}</strong> (5 minus the raised fingers on that hand). Multiply them: <strong>${leftClosed} × ${rightClosed} = ${ones}</strong>. This is the <strong>ONES part</strong> of the multiplication.`,
+            step3Q: `What is the result when the <strong>Tens</strong> value and the <strong>Ones</strong> value are added together?`,
+            step3Explain: (tens, ones, total, lv, rv) => `We now have both parts. The TENS value is <strong>${tens}</strong> and the ONES value is <strong>${ones}</strong>. Add them: <strong>${tens} + ${ones} = ${total}</strong>. Therefore, <strong>${lv} × ${rv} = ${total}</strong>.`
+        },
+        fil: {
+            pageTitle: 'Pag-multiply ng 6 hanggang 10 Gamit ang Daliri',
+            helpBtn: '❓ Paano Gamitin',
+            modalTitle: '📖 Paano Gamitin ang Finger Math',
+            step1Title: '1. Pumili ng Numbers',
+            step1Text: `Bawat daliri ay may number mula <strong>6 hanggang 10</strong> (Hinliliit = 6, Palasingsingan = 7, Panggitnang Daliri = 8, Hintuturo = 9, Hinlalaki = 10). Gamitin ang <strong>▲ / ▼</strong> buttons sa baba ng bawat kamay para pumili ng dalawang numbers na gusto mong i-multiply (halimbawa: Left = 8, Right = 7).`,
+            step2Title: '2. Hanapin ang Tens at Ones',
+            step2Text: `<strong>Tens:</strong> Bilangin lahat ng <strong>nakataas na daliri</strong> sa parehong kamay, tapos i-multiply ng <strong>10</strong>.<br><strong>Ones:</strong> Sa bawat kamay, bilangin ang mga daliring <strong>hindi nakataas</strong>, tapos i-multiply ang bilang ng left hand sa bilang ng right hand.`,
+            step3Title: '3. I-add Sila',
+            step3Text: `I-add ang <strong>Tens</strong> value at ang <strong>Ones</strong> value para makuha ang final answer!`,
+            summaryTitle: '💡 Quick Summary',
+            summaryText: `Pumili ng dalawang numbers gamit ang daliri, tapos mag-bilang ng dalawang beses: nakataas na daliri × 10 (tens), at hindi nakataas na daliri sa bawat kamay na pinag-multiply (ones). I-add ang dalawang results, at yun na ang sagot mo!`,
+            leftHand: 'Left Hand',
+            rightHand: 'Right Hand',
+            val: 'Value',
+            chooseNumbers: 'Pumili ng mga numero',
+            tensPlaceTitle: '1. Tens Place (Nakataas na Daliri)',
+            leftOpenLabel: 'Left nakataas:',
+            rightOpenLabel: 'Right nakataas:',
+            totalOpenLabel: 'Total nakataas:',
+            onesPlaceTitle: '2. Ones Place (Nakababang Daliri)',
+            leftClosedLabel: 'Left nakababa:',
+            rightClosedLabel: 'Right nakababa:',
+            multiplyClosedLabel: 'I-multiply ang nakababa:',
+            calculationLabel: 'Kalkulasyon:',
+            learnHeading: '🎯 Aralin nang Step by Step',
+            stepIntro: `Pindutin ang button na may tamang numero para sagutin ang bawat tanong sa baba. Kapag tama ang sagot mo, lalabas ang explanation at ma-uunlock ang susunod na step — subukan ulit kung mali.`,
+            startBtn: '▶ Simulan ang Step-by-Step',
+            restartBtn: '↻ Ulitin',
+            pleaseChoose: 'Pumili muna ng numero sa parehong kamay.',
+            stepProgress: (l, r) => `Numbers: ${l} × ${r}  •  Tapusin ang bawat step para malantad ang susunod`,
+            stepOf: (n, total) => `Step ${n} ng ${total}`,
+            correctLabel: '✅ <strong>Tama!</strong><br>',
+            wrongFeedback: (selected) => `❌ <strong>Mali pa.</strong><br>Pinili mo ang <strong>${selected}</strong>. Tingnan ulit ang nakataas at nakababang daliri. Bilangin nang mabuti. Hindi pa lalabas ang tamang sagot—subukan ang ibang choice.`,
+            continueBtn: 'Sunod na Step →',
+            finishBtn: '🎉 Tapusin & Ipakita ang Final Result',
+            completedStepLabel: (n, title) => `✅ Step ${n}: ${title}`,
+            yourAnswer: (a) => `Sagot mo: ${a}`,
+            finalResultText: (l, r, total) => `🎉 Galing! Natapos mo lahat ng steps.<br><br>${l} × ${r} = ${total}<br><small>Makikita na ang buong calculation sa baba.</small>`,
+            step1Q: `Ano ang result kapag ang total na bilang ng <strong>nakataas na daliri</strong> sa dalawang kamay ay i-multiply ng <strong>10</strong>?`,
+            step1Explain: (leftOpen, rightOpen, totalOpen, tens) => `Bilangin ang bawat <strong>nakataas na daliri</strong> sa dalawang kamay. Ang LEFT ay may <strong>${leftOpen}</strong> nakataas at ang RIGHT ay may <strong>${rightOpen}</strong> nakataas, kaya ang total ay <strong>${leftOpen} + ${rightOpen} = ${totalOpen}</strong>. I-multiply ito ng 10: <strong>${totalOpen} × 10 = ${tens}</strong>. Ito ang <strong>TENS part</strong> ng multiplication.`,
+            step2Q: `Ano ang result kapag ang mga daliring <strong>hindi nakataas</strong> sa LEFT hand ay i-multiply sa mga daliring hindi nakataas sa RIGHT hand?`,
+            step2Explain: (leftClosed, rightClosed, ones) => `Sa bawat kamay, bilangin ang mga daliring <strong>hindi nakataas</strong>. Ang LEFT ay may <strong>${leftClosed}</strong> at ang RIGHT ay may <strong>${rightClosed}</strong> (5 minus ang nakataas na daliri sa kamay na iyon). I-multiply sila: <strong>${leftClosed} × ${rightClosed} = ${ones}</strong>. Ito ang <strong>ONES part</strong> ng multiplication.`,
+            step3Q: `Ano ang result kapag ang <strong>Tens</strong> value at ang <strong>Ones</strong> value ay pinagsama (in-add)?`,
+            step3Explain: (tens, ones, total, lv, rv) => `Meron na tayong dalawang parts. Ang TENS value ay <strong>${tens}</strong> at ang ONES value ay <strong>${ones}</strong>. I-add sila: <strong>${tens} + ${ones} = ${total}</strong>. Kaya, <strong>${lv} × ${rv} = ${total}</strong>.`
+        }
+    };
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.getElementById('langBtnEn').classList.toggle('active', lang === 'en');
+        document.getElementById('langBtnFil').classList.toggle('active', lang === 'fil');
+        applyTranslations();
+    }
+
+    function applyTranslations() {
+        const t = translations[currentLang];
+        document.title = t.pageTitle;
+        document.getElementById('pageHeading').textContent = t.pageTitle;
+        document.getElementById('helpBtnText').textContent = t.helpBtn;
+        document.getElementById('modalTitleText').textContent = t.modalTitle;
+        document.getElementById('step1TitleText').textContent = t.step1Title;
+        document.getElementById('step1BodyText').innerHTML = t.step1Text;
+        document.getElementById('step2TitleText').textContent = t.step2Title;
+        document.getElementById('step2BodyText').innerHTML = t.step2Text;
+        document.getElementById('step3TitleText').textContent = t.step3Title;
+        document.getElementById('step3BodyText').innerHTML = t.step3Text;
+        document.getElementById('summaryTitleText').textContent = t.summaryTitle;
+        document.getElementById('summaryBodyText').textContent = t.summaryText;
+        document.getElementById('leftHandLabel').textContent = t.leftHand;
+        document.getElementById('rightHandLabel').textContent = t.rightHand;
+        document.getElementById('tensPlaceTitle').textContent = t.tensPlaceTitle;
+        document.getElementById('leftOpenLabel').textContent = t.leftOpenLabel;
+        document.getElementById('rightOpenLabel').textContent = t.rightOpenLabel;
+        document.getElementById('totalOpenLabel').textContent = t.totalOpenLabel;
+        document.getElementById('onesPlaceTitle').textContent = t.onesPlaceTitle;
+        document.getElementById('leftClosedLabel').textContent = t.leftClosedLabel;
+        document.getElementById('rightClosedLabel').textContent = t.rightClosedLabel;
+        document.getElementById('multiplyClosedLabel').textContent = t.multiplyClosedLabel;
+        document.getElementById('calculationLabel').textContent = t.calculationLabel;
+        document.getElementById('learnHeading').textContent = t.learnHeading;
+        document.getElementById('stepIntroText').textContent = t.stepIntro;
+        document.getElementById('showStepBtn').textContent = t.startBtn;
+        document.getElementById('restartStepBtn').textContent = t.restartBtn;
+
+        updateSimulation();
+
+        // Refresh whatever the step-learning box is currently showing.
+        const stepBox = document.getElementById('stepBox');
+        if (!stepBox.classList.contains('hidden')) {
+            if (learningFinished) {
+                const c = getCounts();
+                document.getElementById('currentStep').innerHTML =
+                    `<div class="final-learning-result">${t.finalResultText(leftVal, rightVal, c.total)}</div>`;
+            } else if (learningStep > 0) {
+                renderLearningStep();
+            }
+        }
+    }
+
+    function toggleModal(show) {
+        const modal = document.getElementById('instructionsModal');
+        modal.classList.toggle('active', show);
+    }
+
+    function handleOverlayClick(event) {
+        if (event.target.classList.contains('modal-overlay')) toggleModal(false);
+    }
+
+    function changeLeft(step) {
+        const currentIndex = values.indexOf(leftVal);
+        const newIndex = currentIndex + step;
+        if (newIndex >= 0 && newIndex < values.length) {
+            leftVal = values[newIndex];
+            updateSimulation();
+            resetLearningAfterNumberChange();
+        }
+    }
+
+    function changeRight(step) {
+        const currentIndex = values.indexOf(rightVal);
+        const newIndex = currentIndex + step;
+        if (newIndex >= 0 && newIndex < values.length) {
+            rightVal = values[newIndex];
+            updateSimulation();
+            resetLearningAfterNumberChange();
+        }
+    }
+
+    function updateSimulation() {
+        document.getElementById('btnLDown').disabled = (leftVal === 0);
+        document.getElementById('btnLUp').disabled = (leftVal === 10);
+        document.getElementById('btnRDown').disabled = (rightVal === 0);
+        document.getElementById('btnRUp').disabled = (rightVal === 10);
+
+        document.getElementById('dispLeftText').innerText = `${translations[currentLang].val}: ${leftVal}`;
+        document.getElementById('dispRightText').innerText = `${translations[currentLang].val}: ${rightVal}`;
+
+        [6, 7, 8, 9, 10].forEach(num => {
+            const elL = document.getElementById('L' + num);
+            const elR = document.getElementById('R' + num);
+            elL.classList.remove('open', 'touching');
+            elL.classList.add('closed');
+            elR.classList.remove('open', 'touching');
+            elR.classList.add('closed');
+        });
+
+        let leftOpenCount = 0;
+        if (leftVal >= 6) {
+            for (let num = 6; num <= leftVal; num++) {
+                const el = document.getElementById('L' + num);
+                el.classList.remove('closed');
+                el.classList.add('open');
+                if (num === leftVal) el.classList.add('touching');
+                leftOpenCount++;
+            }
+        }
+
+        let rightOpenCount = 0;
+        if (rightVal >= 6) {
+            for (let num = 6; num <= rightVal; num++) {
+                const el = document.getElementById('R' + num);
+                el.classList.remove('closed');
+                el.classList.add('open');
+                if (num === rightVal) el.classList.add('touching');
+                rightOpenCount++;
+            }
+        }
+
+        const leftClosedCount = 5 - leftOpenCount;
+        const rightClosedCount = 5 - rightOpenCount;
+        const tensValue = (leftOpenCount + rightOpenCount) * 10;
+        const onesValue = leftClosedCount * rightClosedCount;
+        const total = tensValue + onesValue;
+
+        document.getElementById('mathExpr').innerHTML =
+            (leftVal && rightVal) ? `${leftVal} &times; ${rightVal}` : translations[currentLang].chooseNumbers;
+
+        document.getElementById('leftDownCount').innerText = leftOpenCount;
+        document.getElementById('rightDownCount').innerText = rightOpenCount;
+        document.getElementById('totalDown').innerText = leftOpenCount + rightOpenCount;
+        document.getElementById('tensVal').innerText = tensValue;
+        document.getElementById('leftUpCount').innerText = leftClosedCount;
+        document.getElementById('rightUpCount').innerText = rightClosedCount;
+        document.getElementById('leftUpMult').innerText = leftClosedCount;
+        document.getElementById('rightUpMult').innerText = rightClosedCount;
+        document.getElementById('onesVal').innerText = onesValue;
+        document.getElementById('tensValSum').innerText = tensValue;
+        document.getElementById('onesValSum').innerText = onesValue;
+        document.getElementById('finalResult').innerText = total;
+    }
+
+    function getCounts() {
+        const leftOpen = leftVal >= 6 ? leftVal - 5 : 0;
+        const rightOpen = rightVal >= 6 ? rightVal - 5 : 0;
+        const leftClosed = 5 - leftOpen;
+        const rightClosed = 5 - rightOpen;
+        return {
+            leftOpen, rightOpen,
+            totalOpen: leftOpen + rightOpen,
+            leftClosed, rightClosed,
+            tens: (leftOpen + rightOpen) * 10,
+            ones: leftClosed * rightClosed,
+            total: ((leftOpen + rightOpen) * 10) + (leftClosed * rightClosed)
+        };
+    }
+
+    const learningSteps = () => {
+        const c = getCounts();
+        const t = translations[currentLang];
+        return [
+            {
+                title: t.step1Q,
+                answer: c.tens,
+                explain: t.step1Explain(c.leftOpen, c.rightOpen, c.totalOpen, c.tens)
+            },
+            {
+                title: t.step2Q,
+                answer: c.ones,
+                explain: t.step2Explain(c.leftClosed, c.rightClosed, c.ones)
+            },
+            {
+                title: t.step3Q,
+                answer: c.total,
+                explain: t.step3Explain(c.tens, c.ones, c.total, leftVal, rightVal)
+            }
+        ];
+    };
+
+    function clearLearningHistory() {
+        const completed = document.getElementById('completedSteps');
+        if (completed) completed.innerHTML = '';
+    }
+
+    function stepTemplate() {
+        const t = translations[currentLang];
+        return `
+            <p class="step-progress" id="stepProgress"></p>
+            <span class="step-number" id="stepNumber">Step 1</span>
+            <div class="step-question" id="stepQuestion"></div>
+            <div class="step-choices" id="stepChoices"></div>
+            <div class="feedback hidden" id="stepFeedback"></div>
+            <button class="next-step-btn hidden" id="nextStepBtn" onclick="nextLearningStep()">${t.continueBtn}</button>`;
+    }
+
+    function showFirstStep() {
+        if (!leftVal || !rightVal) {
+            alert(translations[currentLang].pleaseChoose);
+            return;
+        }
+        learningStep = 1;
+        learningFinished = false;
+        clearLearningHistory();
+        document.getElementById('showStepBtn').classList.add('hidden');
+        document.getElementById('stepBox').classList.remove('hidden');
+        document.getElementById('restartStepBtn').classList.add('hidden');
+        document.getElementById('resultsPanel').classList.add('locked');
+        // Rebuild the question area in case it still holds the final "finished" screen.
+        document.getElementById('currentStep').innerHTML = stepTemplate();
+        renderLearningStep();
+    }
+
+    function renderLearningStep() {
+        const t = translations[currentLang];
+        const steps = learningSteps();
+        const step = steps[learningStep - 1];
+        const question = document.getElementById('stepQuestion');
+        const choices = document.getElementById('stepChoices');
+        const feedback = document.getElementById('stepFeedback');
+        const nextBtn = document.getElementById('nextStepBtn');
+
+        document.getElementById('stepProgress').textContent = t.stepProgress(leftVal, rightVal);
+        document.getElementById('stepNumber').textContent = t.stepOf(learningStep, steps.length);
+        question.innerHTML = step.title;
+        feedback.className = 'feedback hidden';
+        feedback.innerHTML = '';
+        nextBtn.classList.add('hidden');
+        choices.innerHTML = '';
+
+        let choiceList;
+        if (step.choiceDisplay && step.choices) {
+            choiceList = step.choices.map(x => ({ value: x.value, label: x.label }));
+            // Remove duplicate choices while preserving order.
+            const seen = new Set();
+            choiceList = choiceList.filter(x => !seen.has(x.value) && seen.add(x.value));
+        } else {
+            const candidates = new Set([step.answer]);
+            [Number(step.answer) - 2, Number(step.answer) - 1, Number(step.answer) + 1, Number(step.answer) + 2, 0].forEach(v => {
+                if (Number.isFinite(v) && v >= 0) candidates.add(v);
+            });
+            choiceList = Array.from(candidates).slice(0, 4).map(v => ({ value: v, label: v }));
+            if (!choiceList.some(x => String(x.value) === String(step.answer))) {
+                choiceList[0] = { value: step.answer, label: step.answer };
+            }
+        }
+
+        choiceList.sort(() => Math.random() - 0.5).forEach(choice => {
+            const btn = document.createElement('button');
+            btn.className = 'step-choice';
+            btn.textContent = choice.label;
+            btn.onclick = () => checkLearningAnswer(choice.value, step.answer, step.explain);
+            choices.appendChild(btn);
+        });;
+    }
+
+    function checkLearningAnswer(selected, correct, explanation) {
+        const t = translations[currentLang];
+        const feedback = document.getElementById('stepFeedback');
+        const nextBtn = document.getElementById('nextStepBtn');
+        const buttons = document.querySelectorAll('.step-choice');
+
+        if (String(selected) === String(correct)) {
+            feedback.className = 'feedback correct';
+            feedback.innerHTML = `${t.correctLabel}${explanation}`;
+            buttons.forEach(b => b.disabled = true);
+            nextBtn.textContent = learningStep === learningSteps().length
+                ? t.finishBtn
+                : t.continueBtn;
+            nextBtn.classList.remove('hidden');
+        } else {
+            feedback.className = 'feedback wrong';
+            feedback.innerHTML = t.wrongFeedback(selected);
+        }
+    }
+
+    function nextLearningStep() {
+        const t = translations[currentLang];
+        const steps = learningSteps();
+        const current = steps[learningStep - 1];
+
+        // Save the completed step instead of hiding it.
+        const completed = document.getElementById('completedSteps');
+        const card = document.createElement('div');
+        card.className = 'completed-step';
+        card.innerHTML = `
+            <div class="completed-title">${t.completedStepLabel(learningStep, current.title)}</div>
+            <div class="completed-answer"><strong>${t.yourAnswer(current.answer)}</strong></div>
+            <div class="completed-explanation">${current.explain}</div>`;
+        completed.appendChild(card);
+
+        if (learningStep < steps.length) {
+            learningStep++;
+            renderLearningStep();
+            document.getElementById('stepBox').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+            learningFinished = true;
+            document.getElementById('currentStep').innerHTML =
+                `<div class="final-learning-result">${t.finalResultText(leftVal, rightVal, getCounts().total)}</div>`;
+            document.getElementById('restartStepBtn').classList.remove('hidden');
+            document.getElementById('resultsPanel').classList.remove('locked');
+            document.getElementById('mathExpr').innerHTML = `${leftVal} &times; ${rightVal} = ${getCounts().total}`;
+        }
+    }
+
+    function startLearningAgain() {
+        if (!leftVal || !rightVal) return showFirstStep();
+        learningStep = 1;
+        learningFinished = false;
+        clearLearningHistory();
+        document.getElementById('showStepBtn').classList.add('hidden');
+        document.getElementById('restartStepBtn').classList.add('hidden');
+        document.getElementById('stepBox').classList.remove('hidden');
+        document.getElementById('resultsPanel').classList.add('locked');
+        // Restore the current-step area if it was replaced by the final result.
+        document.getElementById('currentStep').innerHTML = stepTemplate();
+        renderLearningStep();
+    }
+
+    function resetLearningAfterNumberChange() {
+        learningStep = 0;
+        learningFinished = false;
+        const startBtn = document.getElementById('showStepBtn');
+        const stepBox = document.getElementById('stepBox');
+        const restartBtn = document.getElementById('restartStepBtn');
+        const results = document.getElementById('resultsPanel');
+        if (startBtn) startBtn.classList.remove('hidden');
+        if (stepBox) stepBox.classList.add('hidden');
+        if (restartBtn) restartBtn.classList.add('hidden');
+        if (results) results.classList.add('locked');
+        clearLearningHistory();
+    }
+
+    applyTranslations();
+    resetLearningAfterNumberChange();
+</script>
+
+</body>
+</html>
