@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Multiplying and Dividing Integers</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #f4efff, #eaf4ff);
+    color: #292342;
+}
+
+.container {
+    width: 92%;
+    max-width: 850px;
+    margin: auto;
+}
+
+header {
+    background: linear-gradient(135deg, #7657c8, #658fd8);
+    color: white;
+    padding: 28px 20px;
+    text-align: center;
+    border-radius: 0 0 25px 25px;
+    box-shadow: 0 5px 18px rgba(70, 50, 120, 0.2);
+}
+
+header h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+}
+
+header p {
+    margin: 0;
+    font-size: 16px;
+}
+
+.screen {
+    display: none;
+    padding: 25px 0 40px;
+}
+
+.screen.active {
+    display: block;
+}
+
+.card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 22px;
+    box-shadow: 0 5px 18px rgba(70, 50, 120, 0.12);
+}
+
+.card h2 {
+    color: #6345ad;
+    margin-top: 0;
+}
+
+.card h3 {
+    color: #536ebc;
+}
+
+.intro {
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+.rule {
+    background: #f0ebff;
+    border-left: 6px solid #7657c8;
+    padding: 18px;
+    border-radius: 10px;
+    margin: 18px 0;
+    line-height: 1.7;
+}
+
+.example {
+    background: #f7faff;
+    border: 1px solid #dce5fa;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 14px 0;
+    line-height: 1.8;
+}
+
+.math {
+    font-size: 22px;
+    font-weight: bold;
+    color: #53379c;
+}
+
+.tip {
+    background: #fff8dc;
+    border-left: 6px solid #e3b52e;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+    line-height: 1.6;
+}
+
+.bonus-box {
+    background: #ecfdf5;
+    border-left: 6px solid #059669;
+    padding: 18px;
+    border-radius: 10px;
+    margin-top: 20px;
+    line-height: 1.6;
+}
+
+.button-area {
+    text-align: center;
+    margin: 25px 0;
+}
+
+button {
+    border: none;
+    border-radius: 12px;
+    padding: 13px 22px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, #7657c8, #658fd8);
+    color: white;
+    box-shadow: 0 4px 10px rgba(80,60,150,0.2);
+}
+
+.secondary-btn {
+    background: #e9e3ff;
+    color: #553b9c;
+}
+
+.green-btn {
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: white;
+    box-shadow: 0 4px 10px rgba(5,150,105,0.25);
+}
+
+.quiz-header {
+    background: white;
+    padding: 20px;
+    border-radius: 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 14px rgba(70,50,120,0.1);
+}
+
+.quiz-header h2 {
+    margin: 0 0 15px;
+    color: #6044a9;
+}
+
+.progress-container {
+    width: 100%;
+    height: 12px;
+    background: #e5e0f2;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+#progressBar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #7657c8, #658fd8);
+    transition: width 0.3s;
+}
+
+.question-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 5px 18px rgba(70,50,120,0.12);
+}
+
+.question-number {
+    color: #7657c8;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.question {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    margin: 25px 0 30px;
+    color: #33285b;
+}
+
+.choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.choice {
+    background: #f5f2ff;
+    color: #403468;
+    border: 2px solid #ded7f5;
+    min-height: 58px;
+}
+
+.choice:hover:not(:disabled) {
+    background: #e9e3ff;
+    border-color: #7657c8;
+}
+
+.choice:disabled {
+    cursor: default;
+}
+
+.choice.correct {
+    background: #dff5e5;
+    border-color: #45a95e;
+    color: #207036;
+}
+
+.choice.wrong {
+    background: #ffe1e1;
+    border-color: #dc5555;
+    color: #9b2727;
+}
+
+.explanation {
+    display: none;
+    background: #eef5ff;
+    border-left: 6px solid #658fd8;
+    padding: 18px;
+    margin-top: 22px;
+    border-radius: 10px;
+    line-height: 1.7;
+}
+
+.explanation.show {
+    display: block;
+}
+
+.next-area {
+    text-align: right;
+    margin-top: 22px;
+}
+
+#nextButton:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.result-card {
+    background: white;
+    border-radius: 22px;
+    padding: 35px 25px;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(70,50,120,0.15);
+}
+
+.result-card h2 {
+    color: #6345ad;
+}
+
+.score-number {
+    font-size: 60px;
+    font-weight: bold;
+    color: #7657c8;
+    margin: 15px 0;
+}
+
+.result-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin: 25px 0;
+}
+
+.stat {
+    padding: 18px 10px;
+    background: #f5f2ff;
+    border-radius: 14px;
+}
+
+.stat strong {
+    display: block;
+    font-size: 28px;
+    color: #5e48a4;
+}
+
+.stat span {
+    font-size: 14px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    background: rgba(35, 27, 60, 0.6);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-box {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    border-radius: 22px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+    animation: pop 0.25s ease;
+}
+
+@keyframes pop {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-icon {
+    font-size: 55px;
+    margin-bottom: 10px;
+}
+
+.modal-box h2 {
+    margin: 5px 0 10px;
+    color: #6044a9;
+}
+
+.modal-box p {
+    line-height: 1.6;
+    margin-bottom: 22px;
+}
+
+.back-link {
+    display: inline-block;
+    margin: 15px 0 0;
+    color: #553b9c;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #6e6780;
+    font-size: 14px;
+}
+
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 22px;
+    }
+    .card,
+    .question-card {
+        padding: 20px;
+    }
+    .question {
+        font-size: 24px;
+    }
+    .choices {
+        grid-template-columns: 1fr;
+    }
+    .result-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>✖️➗ Multiplying & Dividing Integers</h1>
+    <p>Master the sign rules with small numbers, then practice.</p>
+</header>
+
+<div class="container">
+
+<!-- =====================================================
+     HOME / LESSON SCREEN
+====================================================== -->
+
+<section id="homeScreen" class="screen active">
+
+    <div class="card">
+        <h2>📘 Quick Reminder</h2>
+        <p class="intro">
+            Integers are whole numbers that can be positive, negative, or zero.
+            In this lesson we focus only on <strong>sign rules</strong> using small numbers
+            so you can master the process without big calculations.
+        </p>
+    </div>
+
+    <!-- MULTIPLICATION LESSON -->
+
+    <div class="card">
+        <h2>✖️ Lesson 1: Multiplying Integers</h2>
+
+        <p class="intro">
+            When multiplying integers, look at the signs of the two numbers.
+        </p>
+
+        <div class="rule">
+            <strong>RULE — SAME SIGNS</strong>
+            <br><br>
+            If the signs are the <strong>same</strong> (both positive or both negative):
+            <br>
+            The product is <strong>POSITIVE</strong>.
+        </div>
+
+        <h3>Example 1: Positive × Positive</h3>
+        <div class="example">
+            <p class="math">(+3) × (+2)</p>
+            <p>Both signs are positive (same).</p>
+            <p>3 × 2 = 6</p>
+            <p class="math">Answer: +6</p>
+        </div>
+
+        <h3>Example 2: Negative × Negative</h3>
+        <div class="example">
+            <p class="math">(-4) × (-2)</p>
+            <p>Both signs are negative (same).</p>
+            <p>4 × 2 = 8</p>
+            <p class="math">Answer: +8</p>
+        </div>
+
+        <div class="rule">
+            <strong>RULE — OPPOSITE SIGNS</strong>
+            <br><br>
+            If the signs are <strong>different</strong> (one positive, one negative):
+            <br>
+            The product is <strong>NEGATIVE</strong>.
+        </div>
+
+        <h3>Example 3: Positive × Negative</h3>
+        <div class="example">
+            <p class="math">(+5) × (-3)</p>
+            <p>Signs are opposite.</p>
+            <p>5 × 3 = 15</p>
+            <p class="math">Answer: -15</p>
+        </div>
+
+        <h3>Example 4: Negative × Positive</h3>
+        <div class="example">
+            <p class="math">(-6) × (+2)</p>
+            <p>Signs are opposite.</p>
+            <p>6 × 2 = 12</p>
+            <p class="math">Answer: -12</p>
+        </div>
+
+        <div class="tip">
+            🧠 <strong>Easy reminder:</strong><br><br>
+            Same signs → Positive product<br>
+            Opposite signs → Negative product
+        </div>
+
+        <div class="button-area">
+            <button class="primary-btn" onclick="startQuiz('multiplication')">
+                📝 Take 25-Item Multiplication Quiz
+            </button>
+        </div>
+    </div>
+
+    <!-- DIVISION LESSON -->
+
+    <div class="card">
+        <h2>➗ Lesson 2: Dividing Integers</h2>
+
+        <p class="intro">
+            Division of integers follows the <strong>same sign rules</strong> as multiplication.
+        </p>
+
+        <div class="rule">
+            <strong>RULE — SAME SIGNS</strong>
+            <br><br>
+            Same signs → The quotient is <strong>POSITIVE</strong>.
+        </div>
+
+        <h3>Example 1: Positive ÷ Positive</h3>
+        <div class="example">
+            <p class="math">(+8) ÷ (+2)</p>
+            <p>Both signs are positive.</p>
+            <p>8 ÷ 2 = 4</p>
+            <p class="math">Answer: +4</p>
+        </div>
+
+        <h3>Example 2: Negative ÷ Negative</h3>
+        <div class="example">
+            <p class="math">(-9) ÷ (-3)</p>
+            <p>Both signs are negative.</p>
+            <p>9 ÷ 3 = 3</p>
+            <p class="math">Answer: +3</p>
+        </div>
+
+        <div class="rule">
+            <strong>RULE — OPPOSITE SIGNS</strong>
+            <br><br>
+            Opposite signs → The quotient is <strong>NEGATIVE</strong>.
+        </div>
+
+        <h3>Example 3: Positive ÷ Negative</h3>
+        <div class="example">
+            <p class="math">(+10) ÷ (-2)</p>
+            <p>Signs are opposite.</p>
+            <p>10 ÷ 2 = 5</p>
+            <p class="math">Answer: -5</p>
+        </div>
+
+        <h3>Example 4: Negative ÷ Positive</h3>
+        <div class="example">
+            <p class="math">(-12) ÷ (+3)</p>
+            <p>Signs are opposite.</p>
+            <p>12 ÷ 3 = 4</p>
+            <p class="math">Answer: -4</p>
+        </div>
+
+        <div class="tip">
+            ⚠️ <strong>Important:</strong> You cannot divide by zero.<br>
+            Any number ÷ 0 is undefined.
+        </div>
+
+        <div class="tip">
+            🧠 <strong>Remember:</strong><br><br>
+            Multiplication and Division use the <strong>exact same sign rules</strong>.
+        </div>
+
+        <div class="button-area">
+            <button class="primary-btn" onclick="startQuiz('division')">
+                📝 Take 25-Item Division Quiz
+            </button>
+        </div>
+    </div>
+
+    <!-- BONUS FINGER TRICK -->
+
+    <div class="card">
+        <h2>🖐️ Bonus: Finger Multiplication Trick (6–10)</h2>
+        <p class="intro">
+            Once you know the sign rules, you can also learn a fun finger method
+            to multiply numbers from 6 to 10 quickly.
+        </p>
+
+        <div class="bonus-box">
+            <strong>Interactive Tool Available</strong><br><br>
+            Practice the finger multiplication method with an interactive hands-on tool
+            (supports English and Filipino).
+            <br><br>
+            <a href="finger-mult.html" class="green-btn" style="display:inline-block; text-decoration:none; padding:12px 20px;">
+                🖐️ Open Finger Multiplication Tool
+            </a>
+        </div>
+    </div>
+
+    <div style="text-align:center; margin:20px 0;">
+        <a href="index.html" class="back-link">← Back to Home / Topics</a>
+    </div>
+
+</section>
+
+<!-- =====================================================
+     QUIZ SCREEN
+====================================================== -->
+
+<section id="quizScreen" class="screen">
+
+    <div class="quiz-header">
+        <h2 id="quizTitle">Integer Quiz</h2>
+        <div class="progress-container">
+            <div id="progressBar"></div>
+        </div>
+    </div>
+
+    <div class="question-card">
+        <div id="questionNumber" class="question-number"></div>
+        <div id="questionText" class="question"></div>
+        <div id="choices" class="choices"></div>
+        <div id="explanation" class="explanation"></div>
+        <div class="next-area">
+            <button id="nextButton" class="primary-btn" onclick="nextQuestion()" disabled>
+                Next Question →
+            </button>
+        </div>
+    </div>
+
+</section>
+
+<!-- =====================================================
+     RESULT SCREEN
+====================================================== -->
+
+<section id="resultScreen" class="screen">
+
+    <div class="result-card">
+        <h2 id="resultTitle">Quiz Complete!</h2>
+        <div id="scoreNumber" class="score-number">0/25</div>
+        <p>Your Score</p>
+
+        <div class="result-stats">
+            <div class="stat">
+                <strong id="correctCount">0</strong>
+                <span>Correct</span>
+            </div>
+            <div class="stat">
+                <strong id="wrongCount">0</strong>
+                <span>Wrong</span>
+            </div>
+            <div class="stat">
+                <strong id="percentage">0%</strong>
+                <span>Percentage</span>
+            </div>
+        </div>
+
+        <h3 id="scoreMessage"></h3>
+
+        <div class="button-area">
+            <button class="primary-btn" onclick="restartQuiz()">🔄 Try Again</button>
+            <button class="secondary-btn" onclick="backToLessons()">📘 Back to Lesson</button>
+        </div>
+    </div>
+
+</section>
+
+</div>
+
+<footer>
+    Multiplying and Dividing Integers Practice<br>
+    Learn • Practice • Master
+</footer>
+
+<!-- FEEDBACK MODAL -->
+<div id="feedbackModal" class="modal">
+    <div class="modal-box">
+        <div id="modalIcon" class="modal-icon"></div>
+        <h2 id="modalTitle"></h2>
+        <p id="modalMessage"></p>
+        <button class="primary-btn" onclick="closeFeedback()">Continue →</button>
+    </div>
+</div>
+
+<script>
+
+/* =====================================================
+   MULTIPLICATION QUESTIONS (small numbers only)
+===================================================== */
+
+const multiplicationQuestions = [
+
+{q:"(+3) × (+2) = ?", choices:["+6","-6","+5","-5"], answer:"+6",
+ explanation:"Both signs are positive (same signs). Same signs → positive product. 3 × 2 = 6. Answer: +6."},
+
+{q:"(-4) × (-2) = ?", choices:["+8","-8","+6","-6"], answer:"+8",
+ explanation:"Both signs are negative (same signs). Same signs → positive product. 4 × 2 = 8. Answer: +8."},
+
+{q:"(+5) × (-3) = ?", choices:["+15","-15","+8","-8"], answer:"-15",
+ explanation:"Signs are opposite. Opposite signs → negative product. 5 × 3 = 15. Answer: -15."},
+
+{q:"(-6) × (+2) = ?", choices:["+12","-12","+8","-8"], answer:"-12",
+ explanation:"Signs are opposite. Opposite signs → negative product. 6 × 2 = 12. Answer: -12."},
+
+{q:"(+4) × (+3) = ?", choices:["+12","-12","+7","-7"], answer:"+12",
+ explanation:"Both signs are positive (same). Same signs → positive. 4 × 3 = 12. Answer: +12."},
+
+{q:"(-3) × (-3) = ?", choices:["+9","-9","+6","-6"], answer:"+9",
+ explanation:"Both signs are negative (same). Same signs → positive. 3 × 3 = 9. Answer: +9."},
+
+{q:"(+2) × (-5) = ?", choices:["+10","-10","+7","-7"], answer:"-10",
+ explanation:"Opposite signs → negative product. 2 × 5 = 10. Answer: -10."},
+
+{q:"(-7) × (+1) = ?", choices:["+7","-7","+8","-8"], answer:"-7",
+ explanation:"Opposite signs → negative product. 7 × 1 = 7. Answer: -7."},
+
+{q:"(+1) × (+8) = ?", choices:["+8","-8","+9","-9"], answer:"+8",
+ explanation:"Same signs (both positive) → positive product. 1 × 8 = 8. Answer: +8."},
+
+{q:"(-2) × (-4) = ?", choices:["+8","-8","+6","-6"], answer:"+8",
+ explanation:"Same signs (both negative) → positive product. 2 × 4 = 8. Answer: +8."},
+
+{q:"(+6) × (-1) = ?", choices:["+6","-6","+7","-7"], answer:"-6",
+ explanation:"Opposite signs → negative. 6 × 1 = 6. Answer: -6."},
+
+{q:"(-5) × (+3) = ?", choices:["+15","-15","+8","-8"], answer:"-15",
+ explanation:"Opposite signs → negative. 5 × 3 = 15. Answer: -15."},
+
+{q:"(+2) × (+2) = ?", choices:["+4","-4","+2","-2"], answer:"+4",
+ explanation:"Same signs → positive. 2 × 2 = 4. Answer: +4."},
+
+{q:"(-3) × (-1) = ?", choices:["+3","-3","+4","-4"], answer:"+3",
+ explanation:"Same signs → positive. 3 × 1 = 3. Answer: +3."},
+
+{q:"(+4) × (-2) = ?", choices:["+8","-8","+6","-6"], answer:"-8",
+ explanation:"Opposite signs → negative. 4 × 2 = 8. Answer: -8."},
+
+{q:"(-8) × (+1) = ?", choices:["+8","-8","+9","-9"], answer:"-8",
+ explanation:"Opposite signs → negative. 8 × 1 = 8. Answer: -8."},
+
+{q:"(+5) × (+1) = ?", choices:["+5","-5","+6","-6"], answer:"+5",
+ explanation:"Same signs → positive. 5 × 1 = 5. Answer: +5."},
+
+{q:"(-2) × (-5) = ?", choices:["+10","-10","+7","-7"], answer:"+10",
+ explanation:"Same signs → positive. 2 × 5 = 10. Answer: +10."},
+
+{q:"(+3) × (-4) = ?", choices:["+12","-12","+7","-7"], answer:"-12",
+ explanation:"Opposite signs → negative. 3 × 4 = 12. Answer: -12."},
+
+{q:"(-1) × (+9) = ?", choices:["+9","-9","+10","-10"], answer:"-9",
+ explanation:"Opposite signs → negative. 1 × 9 = 9. Answer: -9."},
+
+{q:"(+7) × (+1) = ?", choices:["+7","-7","+8","-8"], answer:"+7",
+ explanation:"Same signs → positive. 7 × 1 = 7. Answer: +7."},
+
+{q:"(-4) × (-1) = ?", choices:["+4","-4","+5","-5"], answer:"+4",
+ explanation:"Same signs → positive. 4 × 1 = 4. Answer: +4."},
+
+{q:"(+2) × (-3) = ?", choices:["+6","-6","+5","-5"], answer:"-6",
+ explanation:"Opposite signs → negative. 2 × 3 = 6. Answer: -6."},
+
+{q:"(-5) × (+2) = ?", choices:["+10","-10","+7","-7"], answer:"-10",
+ explanation:"Opposite signs → negative. 5 × 2 = 10. Answer: -10."},
+
+{q:"(+0) × (-4) = ?", choices:["0","+4","-4","+1"], answer:"0",
+ explanation:"Any number multiplied by zero is zero. Answer: 0."}
+
+];
+
+/* =====================================================
+   DIVISION QUESTIONS (small numbers only)
+===================================================== */
+
+const divisionQuestions = [
+
+{q:"(+8) ÷ (+2) = ?", choices:["+4","-4","+6","-6"], answer:"+4",
+ explanation:"Both signs positive (same). Same signs → positive quotient. 8 ÷ 2 = 4. Answer: +4."},
+
+{q:"(-9) ÷ (-3) = ?", choices:["+3","-3","+6","-6"], answer:"+3",
+ explanation:"Both signs negative (same). Same signs → positive quotient. 9 ÷ 3 = 3. Answer: +3."},
+
+{q:"(+10) ÷ (-2) = ?", choices:["+5","-5","+8","-8"], answer:"-5",
+ explanation:"Opposite signs → negative quotient. 10 ÷ 2 = 5. Answer: -5."},
+
+{q:"(-12) ÷ (+3) = ?", choices:["+4","-4","+9","-9"], answer:"-4",
+ explanation:"Opposite signs → negative quotient. 12 ÷ 3 = 4. Answer: -4."},
+
+{q:"(+6) ÷ (+2) = ?", choices:["+3","-3","+4","-4"], answer:"+3",
+ explanation:"Same signs → positive. 6 ÷ 2 = 3. Answer: +3."},
+
+{q:"(-8) ÷ (-2) = ?", choices:["+4","-4","+6","-6"], answer:"+4",
+ explanation:"Same signs → positive. 8 ÷ 2 = 4. Answer: +4."},
+
+{q:"(+9) ÷ (-3) = ?", choices:["+3","-3","+6","-6"], answer:"-3",
+ explanation:"Opposite signs → negative. 9 ÷ 3 = 3. Answer: -3."},
+
+{q:"(-15) ÷ (+5) = ?", choices:["+3","-3","+10","-10"], answer:"-3",
+ explanation:"Opposite signs → negative. 15 ÷ 5 = 3. Answer: -3."},
+
+{q:"(+4) ÷ (+1) = ?", choices:["+4","-4","+5","-5"], answer:"+4",
+ explanation:"Same signs → positive. 4 ÷ 1 = 4. Answer: +4."},
+
+{q:"(-6) ÷ (-1) = ?", choices:["+6","-6","+5","-5"], answer:"+6",
+ explanation:"Same signs → positive. 6 ÷ 1 = 6. Answer: +6."},
+
+{q:"(+12) ÷ (-4) = ?", choices:["+3","-3","+8","-8"], answer:"-3",
+ explanation:"Opposite signs → negative. 12 ÷ 4 = 3. Answer: -3."},
+
+{q:"(-10) ÷ (+2) = ?", choices:["+5","-5","+8","-8"], answer:"-5",
+ explanation:"Opposite signs → negative. 10 ÷ 2 = 5. Answer: -5."},
+
+{q:"(+16) ÷ (+4) = ?", choices:["+4","-4","+12","-12"], answer:"+4",
+ explanation:"Same signs → positive. 16 ÷ 4 = 4. Answer: +4."},
+
+{q:"(-14) ÷ (-2) = ?", choices:["+7","-7","+12","-12"], answer:"+7",
+ explanation:"Same signs → positive. 14 ÷ 2 = 7. Answer: +7."},
+
+{q:"(+8) ÷ (-1) = ?", choices:["+8","-8","+9","-9"], answer:"-8",
+ explanation:"Opposite signs → negative. 8 ÷ 1 = 8. Answer: -8."},
+
+{q:"(-9) ÷ (+3) = ?", choices:["+3","-3","+6","-6"], answer:"-3",
+ explanation:"Opposite signs → negative. 9 ÷ 3 = 3. Answer: -3."},
+
+{q:"(+5) ÷ (+5) = ?", choices:["+1","-1","+0","+10"], answer:"+1",
+ explanation:"Same signs → positive. 5 ÷ 5 = 1. Answer: +1."},
+
+{q:"(-4) ÷ (-2) = ?", choices:["+2","-2","+6","-6"], answer:"+2",
+ explanation:"Same signs → positive. 4 ÷ 2 = 2. Answer: +2."},
+
+{q:"(+18) ÷ (-3) = ?", choices:["+6","-6","+15","-15"], answer:"-6",
+ explanation:"Opposite signs → negative. 18 ÷ 3 = 6. Answer: -6."},
+
+{q:"(-20) ÷ (+4) = ?", choices:["+5","-5","+16","-16"], answer:"-5",
+ explanation:"Opposite signs → negative. 20 ÷ 4 = 5. Answer: -5."},
+
+{q:"(+7) ÷ (+1) = ?", choices:["+7","-7","+8","-8"], answer:"+7",
+ explanation:"Same signs → positive. 7 ÷ 1 = 7. Answer: +7."},
+
+{q:"(-3) ÷ (-1) = ?", choices:["+3","-3","+2","-2"], answer:"+3",
+ explanation:"Same signs → positive. 3 ÷ 1 = 3. Answer: +3."},
+
+{q:"(+6) ÷ (-3) = ?", choices:["+2","-2","+9","-9"], answer:"-2",
+ explanation:"Opposite signs → negative. 6 ÷ 3 = 2. Answer: -2."},
+
+{q:"(-8) ÷ (+4) = ?", choices:["+2","-2","+12","-12"], answer:"-2",
+ explanation:"Opposite signs → negative. 8 ÷ 4 = 2. Answer: -2."},
+
+{q:"(+0) ÷ (+5) = ?", choices:["0","+5","-5","undefined"], answer:"0",
+ explanation:"Zero divided by any non-zero number is zero. Answer: 0."}
+
+];
+
+/* =====================================================
+   QUIZ VARIABLES
+===================================================== */
+
+let currentQuiz = [];
+let quizType = "";
+let currentQuestion = 0;
+let correctAnswers = 0;
+let wrongAnswers = 0;
+let answered = false;
+
+/* =====================================================
+   SHUFFLE
+===================================================== */
+
+function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const randomIndex = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[i]];
+    }
+    return shuffled;
+}
+
+/* =====================================================
+   START QUIZ
+===================================================== */
+
+function startQuiz(type) {
+    quizType = type;
+
+    if (type === "multiplication") {
+        currentQuiz = shuffleArray(multiplicationQuestions);
+        document.getElementById("quizTitle").textContent = "✖️ Multiplication of Integers Quiz";
+    } else {
+        currentQuiz = shuffleArray(divisionQuestions);
+        document.getElementById("quizTitle").textContent = "➗ Division of Integers Quiz";
+    }
+
+    currentQuestion = 0;
+    correctAnswers = 0;
+    wrongAnswers = 0;
+    answered = false;
+
+    showScreen("quizScreen");
+    loadQuestion();
+}
+
+/* =====================================================
+   LOAD QUESTION
+===================================================== */
+
+function loadQuestion() {
+    answered = false;
+    const question = currentQuiz[currentQuestion];
+
+    document.getElementById("questionNumber").textContent =
+        "Question " + (currentQuestion + 1) + " of " + currentQuiz.length;
+
+    document.getElementById("questionText").textContent = question.q;
+
+    const progress = ((currentQuestion + 1) / currentQuiz.length) * 100;
+    document.getElementById("progressBar").style.width = progress + "%";
+
+    const randomizedChoices = shuffleArray(question.choices);
+    const choicesContainer = document.getElementById("choices");
+    choicesContainer.innerHTML = "";
+
+    randomizedChoices.forEach(choice => {
+        const button = document.createElement("button");
+        button.className = "choice";
+        button.textContent = choice;
+        button.onclick = function() {
+            selectAnswer(choice, button);
+        };
+        choicesContainer.appendChild(button);
+    });
+
+    document.getElementById("explanation").classList.remove("show");
+    document.getElementById("explanation").innerHTML = "";
+    document.getElementById("nextButton").disabled = true;
+
+    if (currentQuestion === currentQuiz.length - 1) {
+        document.getElementById("nextButton").textContent = "Finish Quiz ✓";
+    } else {
+        document.getElementById("nextButton").textContent = "Next Question →";
+    }
+}
+
+/* =====================================================
+   SELECT ANSWER
+===================================================== */
+
+function selectAnswer(choice, selectedButton) {
+    if (answered) return;
+    answered = true;
+
+    const question = currentQuiz[currentQuestion];
+    const allChoices = document.querySelectorAll(".choice");
+
+    allChoices.forEach(button => {
+        button.disabled = true;
+    });
+
+    if (choice === question.answer) {
+        correctAnswers++;
+        selectedButton.classList.add("correct");
+        showFeedback(true);
+    } else {
+        wrongAnswers++;
+        selectedButton.classList.add("wrong");
+        allChoices.forEach(button => {
+            if (button.textContent === question.answer) {
+                button.classList.add("correct");
+            }
+        });
+        showFeedback(false);
+    }
+}
+
+/* =====================================================
+   SHOW FEEDBACK
+===================================================== */
+
+function showFeedback(isCorrect) {
+    const modal = document.getElementById("feedbackModal");
+    const icon = document.getElementById("modalIcon");
+    const title = document.getElementById("modalTitle");
+    const message = document.getElementById("modalMessage");
+
+    if (isCorrect) {
+        icon.textContent = "🎉";
+        title.textContent = "Good Job!";
+        message.textContent = "That's correct! You understood the sign rule. Keep going!";
+    } else {
+        icon.textContent = "💪";
+        title.textContent = "Keep Practicing!";
+        message.textContent = "That's okay! Review the sign rules carefully and keep practicing.";
+    }
+
+    modal.classList.add("show");
+}
+
+/* =====================================================
+   CLOSE FEEDBACK
+===================================================== */
+
+function closeFeedback() {
+    document.getElementById("feedbackModal").classList.remove("show");
+
+    const question = currentQuiz[currentQuestion];
+    const explanation = document.getElementById("explanation");
+
+    explanation.innerHTML = "<strong>💡 Explanation:</strong><br><br>" + question.explanation;
+    explanation.classList.add("show");
+
+    document.getElementById("nextButton").disabled = false;
+}
+
+/* =====================================================
+   NEXT QUESTION
+===================================================== */
+
+function nextQuestion() {
+    if (!answered) return;
+
+    if (currentQuestion < currentQuiz.length - 1) {
+        currentQuestion++;
+        loadQuestion();
+    } else {
+        showResults();
+    }
+}
+
+/* =====================================================
+   SHOW RESULTS
+===================================================== */
+
+function showResults() {
+    const percentage = Math.round((correctAnswers / currentQuiz.length) * 100);
+
+    document.getElementById("scoreNumber").textContent = correctAnswers + "/" + currentQuiz.length;
+    document.getElementById("correctCount").textContent = correctAnswers;
+    document.getElementById("wrongCount").textContent = wrongAnswers;
+    document.getElementById("percentage").textContent = percentage + "%";
+
+    let message;
+    if (percentage === 100) {
+        message = "🌟 Excellent! You mastered the sign rules!";
+    } else if (percentage >= 80) {
+        message = "👏 Great job! You have a strong understanding of the rules.";
+    } else if (percentage >= 60) {
+        message = "👍 Good effort! Review the rules and practice some more.";
+    } else {
+        message = "💪 Keep practicing! Go back to the lesson and review the steps.";
+    }
+
+    document.getElementById("scoreMessage").textContent = message;
+
+    if (quizType === "multiplication") {
+        document.getElementById("resultTitle").textContent = "✖️ Multiplication Quiz Complete!";
+    } else {
+        document.getElementById("resultTitle").textContent = "➗ Division Quiz Complete!";
+    }
+
+    showScreen("resultScreen");
+}
+
+/* =====================================================
+   TRY AGAIN
+===================================================== */
+
+function restartQuiz() {
+    startQuiz(quizType);
+}
+
+/* =====================================================
+   BACK TO LESSON
+===================================================== */
+
+function backToLessons() {
+    document.getElementById("feedbackModal").classList.remove("show");
+    showScreen("homeScreen");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* =====================================================
+   SCREEN CONTROL
+===================================================== */
+
+function showScreen(screenId) {
+    document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
+    });
+    document.getElementById(screenId).classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+</script>
+
+</body>
+</html>

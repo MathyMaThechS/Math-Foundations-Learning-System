@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Math Foundations Learning System</title>
+    <style>
+        /* Base Palette & Responsive Reset */
+        :root {
+            --bg-main: #f8fafc;
+            --card-bg: #ffffff;
+            --header-bg: #0f172a;
+            
+            --primary-accent: #0284c7;
+            --energy-green: #059669;
+            --energy-green-active: #047857;
+            --sidebar-bg: #1e293b;
+            --sidebar-hover: #334155;
+            
+            --text-heading: #0f172a;
+            --text-body: #334155;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-body);
+            line-height: 1.5;
+            font-size: 16px;
+        }
+
+        /* Top Bar Navigation with Hamburger Toggle */
+        .top-bar {
+            background-color: var(--header-bg);
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .toggle-btn {
+            background-color: var(--energy-green);
+            color: white;
+            border: none;
+            padding: 0.5rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .top-bar-title {
+            margin-left: 0.8rem;
+            font-size: 1rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Sliding Left Sidebar Container */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background-color: var(--sidebar-bg);
+            color: #f1f5f9;
+            z-index: 1000;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar-header {
+            padding: 1.2rem 1rem;
+            background-color: var(--header-bg);
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-header h3 {
+            font-size: 1.1rem;
+            color: #ffffff;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0 0.5rem;
+        }
+
+        /* Collapsible Sidebar Accordion Links */
+        .sidebar-menu {
+            padding: 0.5rem 0;
+        }
+
+        details.topic-accordion {
+            border-bottom: 1px solid #334155;
+        }
+
+        details.topic-accordion summary {
+            padding: 0.85rem 1rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #e2e8f0;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--sidebar-bg);
+            transition: background 0.2s;
+        }
+
+        details.topic-accordion summary:hover {
+            background-color: var(--sidebar-hover);
+        }
+
+        details.topic-accordion summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details.topic-accordion summary::after {
+            content: "▸";
+            font-size: 0.9rem;
+            color: var(--primary-accent);
+            transition: transform 0.2s;
+        }
+
+        details.topic-accordion[open] summary::after {
+            transform: rotate(90deg);
+        }
+
+        .subtopic-list {
+            background-color: #0f172a;
+            list-style: none;
+            padding: 0.3rem 0;
+        }
+
+        .subtopic-list li a {
+            display: block;
+            padding: 0.65rem 1rem 0.65rem 2rem;
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.88rem;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .subtopic-list li a:hover, .subtopic-list li a:active {
+            color: #ffffff;
+            background-color: #1e293b;
+            border-left-color: var(--energy-green);
+        }
+
+        /* Overlay Background when Sidebar is Open */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 900;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Main Page Header */
+        header {
+            background-color: var(--header-bg);
+            color: #ffffff;
+            padding: 2rem 1.25rem 1.75rem 1.25rem;
+            text-align: center;
+            border-bottom: 4px solid var(--energy-green);
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1.25;
+            margin-bottom: 0.6rem;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+
+        /* Content Container */
+        .container {
+            width: 100%;
+            padding: 1rem 0.85rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border-color);
+        }
+
+        h2 {
+            color: var(--text-heading);
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        /* Mobile Notice Box */
+        .notice-box {
+            background-color: #e0f2fe;
+            border-left: 4px solid var(--primary-accent);
+            padding: 0.85rem;
+            margin-top: 1rem;
+            font-size: 0.88rem;
+            color: #0369a1;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Lesson / Trick cards */
+        .lesson-list, .trick-list {
+            list-style: none;
+            margin-top: 0.8rem;
+        }
+
+        .lesson-list li, .trick-list li {
+            margin-bottom: 0.7rem;
+        }
+
+        .lesson-list a, .trick-list a {
+            display: block;
+            padding: 0.85rem 1rem;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-heading);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .lesson-list a:hover, .trick-list a:hover {
+            background: #e0f2fe;
+            border-color: var(--primary-accent);
+            color: #0369a1;
+        }
+
+        .lesson-list a span, .trick-list a span {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+        }
+
+        /* Mobile Contact List */
+        .contact-list {
+            list-style: none;
+            margin-top: 0.8rem;
+        }
+
+        .contact-list li {
+            margin-bottom: 0.85rem;
+            font-size: 0.95rem;
+            word-break: break-word;
+        }
+
+        .contact-list strong {
+            display: block;
+            color: var(--text-heading);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.15rem;
+        }
+
+        .contact-list a {
+            color: var(--primary-accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* QR Code Container */
+        .qr-container {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .qr-placeholder {
+            width: 160px;
+            height: 160px;
+            background-color: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            border: 2px dashed var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-radius: 12px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            background-color: var(--header-bg);
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-top: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .container {
+                max-width: 900px;
+                margin: 1.5rem auto;
+                padding: 0 1.5rem;
+            }
+
+            header h1 {
+                font-size: 2.2rem;
+            }
+
+            .support-contact-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Top Navigation Bar -->
+    <div class="top-bar">
+        <button class="toggle-btn" id="openSidebarBtn" aria-label="Open Topics Menu">
+            <span>☰</span> Topics
+        </button>
+        <div class="top-bar-title">Math Foundations Learning System</div>
+    </div>
+
+    <!-- Dark Background Overlay for Mobile Sidebar -->
+    <div class="overlay" id="sidebarOverlay"></div>
+
+    <!-- Collapsible Sliding Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Lesson Topics</h3>
+            <button class="close-btn" id="closeSidebarBtn" aria-label="Close Menu">&times;</button>
+        </div>
+
+        <nav class="sidebar-menu">
+            
+            <!-- MAIN TOPIC 1 -->
+            <details class="topic-accordion" open>
+                <summary>Mastering Operations on Signed Numbers</summary>
+                <ul class="subtopic-list">
+                    <li>
+                        <a href="addsub.html">Addition & Subtraction of Integers</a>
+                    </li>
+                    <li>
+                        <a href="multdiv.html">Multiplication & Division of Integers</a>
+                    </li>
+                </ul>
+            </details>
+
+            <!-- MATH TRICKS -->
+            <details class="topic-accordion">
+                <summary>Math Tricks & Shortcuts</summary>
+                <ul class="subtopic-list">
+                    <li>
+                        <a href="finger-mult.html">Finger Multiplication (6–10)</a>
+                    </li>
+                </ul>
+            </details>
+
+            <!-- Future topics can easily be pasted below as new <details> blocks -->
+
+        </nav>
+    </aside>
+
+    <!-- Main Header -->
+    <header>
+        <h1>Math Foundations Learning System</h1>
+        <p>Mastering basic principles to easily solve complex math problems.</p>
+    </header>
+
+    <div class="container">
+
+        <!-- About & Pedagogical Concept Section -->
+        <section class="card">
+            <h2>About This Platform</h2>
+            <p>
+                Many students struggle with advanced mathematics not because concepts are impossible, but because foundational skills are missing. Complex math problems are simply combinations of simple core principles. Mastering these basics makes higher topics easier to solve.
+            </p>
+            <br>
+            <p>
+                <strong>About the Author:</strong> I am a Licensed Professional Teacher (BSEd major in Mathematics). While I am not an IT expert, I am a tech enthusiast trying to use technology to improve students' math performance and build strong problem-solving skills.
+            </p>
+
+            <div class="notice-box">
+                <strong>Notice on Updates:</strong> Because math formulas can be challenging to code in HTML on small screens, topics that are easier to format will be published first. Tap the <strong>"☰ Topics"</strong> button at the top to browse available lessons and tricks.
+            </div>
+        </section>
+
+        <!-- Core Lessons -->
+        <section class="card">
+            <h2>Core Lessons</h2>
+            <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">Start with the foundational rules for integers:</p>
+            <ul class="lesson-list">
+                <li>
+                    <a href="addsub.html">
+                        ➕➖ Addition & Subtraction of Integers
+                        <span>Learn the rules and practice with 25-item quizzes</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="multdiv.html">
+                        ✖️➗ Multiplication & Division of Integers
+                        <span>Master the sign rules with small numbers + quizzes</span>
+                    </a>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Math Tricks Section -->
+        <section class="card">
+            <h2>Math Tricks & Shortcuts</h2>
+            <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">Helpful techniques to compute faster once you know the basic rules:</p>
+            <ul class="trick-list">
+                <li>
+                    <a href="finger-mult.html">
+                        🖐️ Finger Multiplication (6–10)
+                        <span>Interactive tool (English & Filipino) – multiply using your fingers</span>
+                    </a>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Contact & Support Section -->
+        <div class="support-contact-grid">
+            
+            <!-- Contact & Topic Requests -->
+            <section class="card">
+                <h2>Request a Topic</h2>
+                <p style="font-size: 0.9rem;">Want me to prioritize a specific topic? Reach out directly:</p>
+                
+                <ul class="contact-list">
+                    <li>
+                        <strong>Facebook</strong>
+                        <a href="https://www.facebook.com/pacardzmanuel" target="_blank">Manuel Pacardo</a>
+                    </li>
+                    <li>
+                        <strong>Email</strong>
+                        <a href="mailto:mathymathechs@gmail.com">mathymathechs@gmail.com</a>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Support / Donations -->
+            <section class="card">
+                <h2>Support Project</h2>
+                <p style="font-size: 0.9rem;">Support continuous website updates and resource creation via QR donation:</p>
+                
+                <div class="qr-container">
+                    <div class="qr-placeholder">
+                        [ Insert QR Code Image ]
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Math Foundations Learning System<br>Developed by a Dedicated Math Educator</p>
+    </footer>
+
+    <!-- Simple JavaScript for Sidebar Toggle -->
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const openBtn = document.getElementById('openSidebarBtn');
+        const closeBtn = document.getElementById('closeSidebarBtn');
+
+        function openSidebar() {
+            sidebar.classList.add('open');
+            overlay.classList.add('active');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        }
+
+        openBtn.addEventListener('click', openSidebar);
+        closeBtn.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+    </script>
+
+</body>
+</html>
